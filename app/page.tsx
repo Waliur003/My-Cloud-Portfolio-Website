@@ -743,19 +743,17 @@ const skillGroups = [
 ];
 
 const certifications = [
-  ["AWS", "AWS Certified Solutions Architect – Associate", "Amazon Web Services", "Certified", "orange"],
-  ["AWS", "AWS Certified Cloud Practitioner", "Amazon Web Services", "Credential", "orange"],
-  ["TF", "HashiCorp Certified: Terraform Associate", "HashiCorp", "Credential", "violet"],
-  ["CSA", "Certificate of Cloud Security Knowledge (CCSK) v5", "Cloud Security Alliance", "Credential", "blue"],
-  ["S+", "CompTIA Security+", "CompTIA", "Credential", "red"],
-  ["CC", "Certified in Cybersecurity (CC)", "ISC2", "Credential", "cyan"],
-  ["BT", "Blue Team Junior Analyst", "Security Blue Team", "Credential", "blue"],
-  ["G", "Google Cybersecurity Certificate", "Google", "Credential", "cyan"],
-  ["G", "Google IT Support Specialization", "Google", "Credential", "blue"],
-  ["G", "Google Project Management", "Google", "Credential", "violet"],
-  ["PY", "PCEP – Entry-Level Python Programmer", "Python Institute", "Credential", "blue"],
-  ["TI", "Practitioner Level Threat Intelligence Analyst", "arcX", "Credential", "orange"],
-  ["GRC", "The Definitive GRC Analyst Master Class", "TCM Security", "Credential", "red"],
+  ["AWS Certified Solutions Architect – Associate", "Amazon Web Services", "Certified", "orange", "https://i.postimg.cc/CLTLFHHq/image-(5).png", "https://postimg.cc/mhjGj9nL"],
+  ["AWS Certified Cloud Practitioner", "Amazon Web Services", "Credential", "orange", "https://i.postimg.cc/8PHfF0Cb/image.png", "https://postimg.cc/hfXt6MTJ"],
+  ["HashiCorp Certified: Terraform Associate", "HashiCorp", "Credential", "violet", "https://i.postimg.cc/cJ8Jc9dY/blob.png", "https://postimg.cc/sBsyjJQD"],
+  ["Certificate of Cloud Security Knowledge (CCSK) v5", "Cloud Security Alliance", "Credential", "blue", "https://i.postimg.cc/YCv2pnGZ/image-(1).png", "https://postimg.cc/gxPbsKKH"],
+  ["CompTIA Security+", "CompTIA", "Credential", "red", "https://i.postimg.cc/L6Z02j4r/blob-(1).png", "https://postimg.cc/RN4TT6HR"],
+  ["Certified in Cybersecurity (CC)", "ISC2", "Credential", "cyan", "https://i.postimg.cc/XvhQRJS0/image-(2).png", "https://postimg.cc/TyVVmT3k"],
+  ["Google Cybersecurity Certificate", "Google", "Credential", "cyan", "https://i.postimg.cc/MTVbgmms/image-(3).png", "https://postimg.cc/DJfXXsDs"],
+  ["Google IT Support Specialization", "Google", "Credential", "blue", "https://i.postimg.cc/zvdLQy6V/GCC-badge-IT-Support-1000x1000.png", "https://postimg.cc/wRmTyj6p"],
+  ["Google Project Management", "Google", "Credential", "violet", "https://i.postimg.cc/5tMtn5j1/image-(4).png", "https://postimg.cc/XrQ3vCwD"],
+  ["PCEP – Entry-Level Python Programmer", "Python Institute", "Credential", "blue", "https://i.postimg.cc/jdwdT37K/bronze-1-small.png", "https://postimg.cc/bsPjHTgF"],
+  ["Practitioner Level Threat Intelligence Analyst", "arcX", "Credential", "orange", "https://i.postimg.cc/HWfjrCHj/medium.png", "https://postimg.cc/PNQd79Ck"],
 ];
 
 const roadmap = [
@@ -987,7 +985,6 @@ export default function Home() {
               <span>Based in New York</span>
             </div>
           </div>
-          <div className="hero-index">01 <span>/</span> CLOUD SYSTEMS</div>
         </section>
 
         <section className="story section frame" id="about">
@@ -1082,11 +1079,13 @@ export default function Home() {
         </section>
 
         <section className="certifications section frame" id="certifications">
-          <SectionHeading kicker="VERIFIED LEARNING / 06" title="Credentials that reinforce the path." text="Cloud, infrastructure, cybersecurity, and operations learning—presented without fabricated badges or unsupported dates." />
+          <SectionHeading kicker="VERIFIED LEARNING / 06" title="Credentials that reinforce the path." text="Cloud, infrastructure, cybersecurity, and operations credentials represented by their corresponding badge artwork." />
           <div className="cert-grid">
-            {certifications.map(([mark, name, issuer, status, color]) => (
+            {certifications.map(([name, issuer, status, color, badge, badgePage]) => (
               <article className={`cert-card reveal cert-${color}`} key={name}>
-                <div className="cert-mark" aria-hidden="true">{mark}</div>
+                <a className="cert-mark" href={badgePage} target="_blank" rel="noreferrer" aria-label={`View ${name} badge image`}>
+                  <img src={badge} alt={`${name} badge`} loading="lazy" decoding="async" referrerPolicy="no-referrer" />
+                </a>
                 <div><span>{issuer}</span><h3>{name}</h3><p><i />{status}</p></div>
               </article>
             ))}
