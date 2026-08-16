@@ -47,7 +47,7 @@ button { color: inherit; }
 .nav-resume:hover { background: var(--orange); color: #111; }
 .menu-button { display: none; background: none; border: 0; width: 40px; height: 40px; }
 
-.hero { min-height: calc(100vh - 116px); margin-top: 32px; display: flex; align-items: center; background: linear-gradient(135deg, rgba(10,18,28,.97), rgba(6,10,17,.99)); border: 1px solid var(--line); overflow: hidden; isolation: isolate; }
+.hero { position: relative; width: 100%; min-height: calc(100svh - 96px); margin: 0; display: flex; align-items: center; background: linear-gradient(135deg, rgba(10,18,28,.97), rgba(6,10,17,.99)); border: 0; overflow: hidden; isolation: isolate; }
 .hero::before { content: ""; position: absolute; inset: 0; z-index: -1; background-image: linear-gradient(rgba(92,139,177,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(92,139,177,.04) 1px, transparent 1px); background-size: 48px 48px; mask-image: linear-gradient(to right, transparent 15%, #000 55%); }
 .hero-copy { width: 100%; max-width: 1060px; padding: clamp(70px, 8vw, 126px) clamp(42px, 7vw, 112px); display: flex; flex-direction: column; justify-content: center; }
 .availability { font-family: var(--font-mono); font-size: 10px; letter-spacing: .14em; color: #a6bad0; display: flex; align-items: center; gap: 10px; }
@@ -74,8 +74,6 @@ h1 em, h2 em { font-style: normal; color: var(--orange); }
 .hero-socials a b { font-size: 10px; font-weight: 700; letter-spacing: .04em; }
 .hero-socials a .github-icon, .hero-socials a .linkedin-icon { width: 15px; height: 15px; }
 .hero-socials > span { margin-left: 1px; }
-.hero-index { position: absolute; bottom: 18px; left: 22px; font-family: var(--font-mono); font-size: 9px; letter-spacing: .15em; color: #506276; }
-.hero-index span { color: var(--orange); padding: 0 6px; }
 
 .kicker { display: flex; align-items: center; gap: 11px; color: #7991a8; font: 10px var(--font-mono); letter-spacing: .18em; }
 .kicker i { width: 24px; height: 1px; background: var(--orange); }
@@ -159,10 +157,12 @@ h1 em, h2 em { font-style: normal; color: var(--orange); }
 
 .certifications { border-bottom: 1px solid var(--line); }
 .cert-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 13px; }
-.cert-card { display: grid; grid-template-columns: 64px 1fr; gap: 17px; min-height: 150px; align-items: center; padding: 22px; background: rgba(10,18,28,.72); border: 1px solid var(--line); transition: transform .2s, border-color .2s; }
-.cert-card:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--cert-color) 55%, transparent); }
+.cert-card { display: grid; grid-template-columns: 100px 1fr; gap: 20px; min-height: 184px; align-items: center; padding: 22px; background: rgba(10,18,28,.72); border: 1px solid var(--line); transition: transform .2s, border-color .2s; }
+.cert-card:hover { transform: translateY(-3px); border-color: rgba(148,181,215,.3); }
 .cert-orange { --cert-color: var(--orange); }.cert-violet { --cert-color: var(--violet); }.cert-blue { --cert-color: var(--blue); }.cert-cyan { --cert-color: var(--cyan); }.cert-red { --cert-color: #ff5e63; }
-.cert-mark { width: 58px; height: 58px; display: grid; place-items: center; border-radius: 50%; border: 1px solid color-mix(in srgb, var(--cert-color) 55%, transparent); color: var(--cert-color); background: color-mix(in srgb, var(--cert-color) 7%, transparent); box-shadow: inset 0 0 22px color-mix(in srgb, var(--cert-color) 7%, transparent); font: 700 13px var(--font-mono); }
+.cert-mark { width: 96px; height: 96px; display: grid; place-items: center; border: 0; background: transparent; overflow: visible; }
+.cert-mark img { width: 100%; height: 100%; display: block; object-fit: contain; image-rendering: auto; filter: saturate(1.08) contrast(1.04) drop-shadow(0 5px 12px rgba(0,0,0,.28)); transition: transform .2s, filter .2s; }
+.cert-mark:hover img { transform: scale(1.07); filter: saturate(1.12) contrast(1.06) drop-shadow(0 7px 15px rgba(0,0,0,.34)); }
 .cert-card span { color: #667c91; font: 8px var(--font-mono); text-transform: uppercase; letter-spacing: .1em; }
 .cert-card h3 { margin: 8px 0; font-size: 14px; line-height: 1.35; }
 .cert-card p { margin: 0; color: #90a7b9; font: 8px var(--font-mono); display: flex; align-items: center; gap: 7px; }
@@ -275,10 +275,9 @@ footer { border-top: 1px solid var(--line); background: #04070b; }
   .nav-links { display: none; position: absolute; left: 14px; right: 14px; top: 75px; padding: 20px; background: rgba(7,12,19,.98); border: 1px solid var(--line); flex-direction: column; align-items: stretch; }
   .nav-links.open { display: flex; }
   .nav-links a, .nav-links a:nth-child(n) { display: block; padding: 11px; font-size: 15px; }
-  .hero { min-height: auto; margin-top: 14px; }
+  .hero { min-height: calc(100svh - 76px); margin-top: 0; }
   .hero-copy { padding: 64px 25px 55px; }
   .hero h1 { font-size: clamp(43px, 13vw, 64px); }
-  .hero-index { display: none; }
   .story { display: grid; grid-template-columns: 1fr; gap: 12px; }
   .story-number { display: none; }
   .story-body { padding-top: 0; }
