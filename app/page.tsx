@@ -36,7 +36,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-const resumeUrl = ""; // Replace with the final public PDF URL when supplied.
+const resumeUrl = "/waliur-r-sun-resume.pdf";
 const githubUrl = "https://github.com/Waliur003";
 const linkedinUrl = "https://www.linkedin.com/in/waliur-r-sun-22762a31a/";
 const email = "waliurrahmansun003@gmail.com";
@@ -799,16 +799,12 @@ function ResumeLink({ compact = false }: { compact?: boolean }) {
   return (
     <a
       className={compact ? "nav-resume" : "button button-secondary"}
-      href={resumeUrl || "#resume"}
-      aria-label={resumeUrl ? "Download resume" : "Resume will be available soon"}
-      onClick={(event) => {
-        if (!resumeUrl) {
-          event.preventDefault();
-          document.getElementById("resume")?.scrollIntoView({ behavior: "smooth" });
-        }
-      }}
+      href={resumeUrl}
+      target="_blank"
+      rel="noreferrer"
+      aria-label="View Waliur R Sun resume (PDF)"
     >
-      Download Resume
+      View Resume
     </a>
   );
 }
@@ -1124,8 +1120,8 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="resume-note frame" id="resume" aria-label="Resume availability">
-          <span>RESUME CONFIGURATION</span><p>The final resume PDF has not been supplied yet. The download action is ready to connect when it becomes available.</p>
+        <section className="resume-note frame" id="resume" aria-label="Resume">
+          <span>RESUME</span><p>View my current resume for a concise summary of my cloud engineering, cloud security, projects, skills, and certifications.</p>
         </section>
 
         <section className="contact section frame" id="contact">
