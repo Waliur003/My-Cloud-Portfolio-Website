@@ -15,8 +15,15 @@
 
 # next.js
 /.next/
-/.vinext/
 /out/
+
+# legacy build artifacts (safe to remove locally)
+/.vinext/
+/.wrangler/
+/dist/
+
+# local package cache used by restricted development environments
+/.npm-cache/
 
 # misc
 .DS_Store
@@ -34,7 +41,4 @@ yarn-error.log*
 # vercel
 .vercel
 
-/dist/
-/.wrangler/
-/outputs/
 /work/
