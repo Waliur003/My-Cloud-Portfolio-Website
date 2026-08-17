@@ -743,17 +743,17 @@ const skillGroups = [
 ];
 
 const certifications = [
-  ["AWS Certified Solutions Architect – Associate", "Amazon Web Services", "Certified", "orange", "https://i.postimg.cc/CLTLFHHq/image-(5).png", "https://postimg.cc/mhjGj9nL"],
-  ["AWS Certified Cloud Practitioner", "Amazon Web Services", "Credential", "orange", "https://i.postimg.cc/8PHfF0Cb/image.png", "https://postimg.cc/hfXt6MTJ"],
-  ["HashiCorp Certified: Terraform Associate", "HashiCorp", "Credential", "violet", "https://i.postimg.cc/cJ8Jc9dY/blob.png", "https://postimg.cc/sBsyjJQD"],
-  ["Certificate of Cloud Security Knowledge (CCSK) v5", "Cloud Security Alliance", "Credential", "blue", "https://i.postimg.cc/YCv2pnGZ/image-(1).png", "https://postimg.cc/gxPbsKKH"],
-  ["CompTIA Security+", "CompTIA", "Credential", "red", "https://i.postimg.cc/L6Z02j4r/blob-(1).png", "https://postimg.cc/RN4TT6HR"],
-  ["Certified in Cybersecurity (CC)", "ISC2", "Credential", "cyan", "https://i.postimg.cc/XvhQRJS0/image-(2).png", "https://postimg.cc/TyVVmT3k"],
-  ["Google Cybersecurity Certificate", "Google", "Credential", "cyan", "https://i.postimg.cc/MTVbgmms/image-(3).png", "https://postimg.cc/DJfXXsDs"],
-  ["Google IT Support Specialization", "Google", "Credential", "blue", "https://i.postimg.cc/zvdLQy6V/GCC-badge-IT-Support-1000x1000.png", "https://postimg.cc/wRmTyj6p"],
-  ["Google Project Management", "Google", "Credential", "violet", "https://i.postimg.cc/5tMtn5j1/image-(4).png", "https://postimg.cc/XrQ3vCwD"],
-  ["PCEP – Entry-Level Python Programmer", "Python Institute", "Credential", "blue", "https://i.postimg.cc/jdwdT37K/bronze-1-small.png", "https://postimg.cc/bsPjHTgF"],
-  ["Practitioner Level Threat Intelligence Analyst", "arcX", "Credential", "orange", "https://i.postimg.cc/HWfjrCHj/medium.png", "https://postimg.cc/PNQd79Ck"],
+  ["AWS Certified Solutions Architect – Associate", "Amazon Web Services", "Certified", "orange", "https://i.postimg.cc/CLTLFHHq/image-(5).png", "https://www.credly.com/badges/5b63cc2f-2108-4fa7-ba09-71ef62847cda/linked_in_profile"],
+  ["AWS Certified Cloud Practitioner", "Amazon Web Services", "Certified", "orange", "https://i.postimg.cc/8PHfF0Cb/image.png", "https://www.credly.com/badges/9923be96-f023-4c02-996c-b031133c63e8/linked_in_profile"],
+  ["HashiCorp Certified: Terraform Associate", "HashiCorp", "Coming Soon", "violet", "https://i.postimg.cc/cJ8Jc9dY/blob.png", ""],
+  ["Certificate of Cloud Security Knowledge (CCSK) v5", "Cloud Security Alliance", "Certified", "blue", "https://i.postimg.cc/YCv2pnGZ/image-(1).png", "https://www.credly.com/badges/88c609d9-1635-4d7b-a30c-a76908824017/linked_in_profile"],
+  ["CompTIA Security+", "CompTIA", "Certified", "red", "https://i.postimg.cc/L6Z02j4r/blob-(1).png", "https://www.credly.com/badges/45baae79-3f9d-48e5-80f7-0da91291290a/linked_in_profile"],
+  ["Certified in Cybersecurity (CC)", "ISC2", "Certified", "cyan", "https://i.postimg.cc/XvhQRJS0/image-(2).png", "https://www.credly.com/badges/f7e55233-c69c-424f-81c7-07b60a20d519/public_url"],
+  ["Google Cybersecurity Certificate", "Google", "Certificate of Completion", "cyan", "https://i.postimg.cc/MTVbgmms/image-(3).png", "https://www.credly.com/badges/4820078c-cdca-44b6-88f4-1897ca54a704/public_url"],
+  ["Google IT Support Specialization", "Google", "Certificate of Completion", "blue", "https://i.postimg.cc/zvdLQy6V/GCC-badge-IT-Support-1000x1000.png", "https://www.credly.com/badges/597b3e3f-43d6-471d-8de6-816255e11b10"],
+  ["Google Project Management", "Google", "Certificate of Completion", "violet", "https://i.postimg.cc/5tMtn5j1/image-(4).png", "https://www.coursera.org/account/accomplishments/specialization/L222U6JMFTPQ"],
+  ["PCEP – Entry-Level Python Programmer", "Python Institute", "Certified", "blue", "https://i.postimg.cc/jdwdT37K/bronze-1-small.png", "https://www.credly.com/badges/e79212d9-d535-4a40-9516-8d90767133cf/linked_in_profile"],
+  ["Practitioner Level Threat Intelligence Analyst", "arcX", "Certified", "orange", "https://i.postimg.cc/HWfjrCHj/medium.png", "https://arcx.io/verify-certificate?id=ca970527041c6e8fe0d065efa5f6efbbd164aae5&k=5128231388624223b23953405b6ebfbc"],
 ];
 
 const roadmap = [
@@ -1083,9 +1083,15 @@ export default function Home() {
           <div className="cert-grid">
             {certifications.map(([name, issuer, status, color, badge, badgePage]) => (
               <article className={`cert-card reveal cert-${color}`} key={name}>
-                <a className="cert-mark" href={badgePage} target="_blank" rel="noreferrer" aria-label={`View ${name} badge image`}>
-                  <img src={badge} alt={`${name} badge`} loading="lazy" decoding="async" referrerPolicy="no-referrer" />
-                </a>
+                {badgePage ? (
+                  <a className="cert-mark" href={badgePage} target="_blank" rel="noreferrer" aria-label={`View ${name} credential`}>
+                    <img src={badge} alt={`${name} badge`} loading="lazy" decoding="async" referrerPolicy="no-referrer" />
+                  </a>
+                ) : (
+                  <div className="cert-mark" aria-label={`${name} credential coming soon`}>
+                    <img src={badge} alt={`${name} badge`} loading="lazy" decoding="async" referrerPolicy="no-referrer" />
+                  </div>
+                )}
                 <div><span>{issuer}</span><h3>{name}</h3><p><i />{status}</p></div>
               </article>
             ))}
