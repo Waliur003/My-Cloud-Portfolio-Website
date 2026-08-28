@@ -745,7 +745,7 @@ const skillGroups = [
 const certifications = [
   ["AWS Certified Solutions Architect – Associate", "Amazon Web Services", "Certified", "orange", "https://i.postimg.cc/CLTLFHHq/image-(5).png", "https://www.credly.com/badges/5b63cc2f-2108-4fa7-ba09-71ef62847cda/linked_in_profile"],
   ["AWS Certified Cloud Practitioner", "Amazon Web Services", "Certified", "orange", "https://i.postimg.cc/8PHfF0Cb/image.png", "https://www.credly.com/badges/9923be96-f023-4c02-996c-b031133c63e8/linked_in_profile"],
-  ["HashiCorp Certified: Terraform Associate", "HashiCorp", "Coming Soon", "violet", "https://i.postimg.cc/cJ8Jc9dY/blob.png", ""],
+  ["HashiCorp Certified: Terraform Associate", "HashiCorp", "Certified", "violet", "https://i.postimg.cc/cJ8Jc9dY/blob.png", "https://www.credly.com/badges/e545ba3f-e8b1-4c75-a22c-47f0870a8189/linked_in_profile"],
   ["Certificate of Cloud Security Knowledge (CCSK) v5", "Cloud Security Alliance", "Certified", "blue", "https://i.postimg.cc/YCv2pnGZ/image-(1).png", "https://www.credly.com/badges/88c609d9-1635-4d7b-a30c-a76908824017/linked_in_profile"],
   ["CompTIA Security+", "CompTIA", "Certified", "red", "https://i.postimg.cc/L6Z02j4r/blob-(1).png", "https://www.credly.com/badges/45baae79-3f9d-48e5-80f7-0da91291290a/linked_in_profile"],
   ["Certified in Cybersecurity (CC)", "ISC2", "Certified", "cyan", "https://i.postimg.cc/XvhQRJS0/image-(2).png", "https://www.credly.com/badges/f7e55233-c69c-424f-81c7-07b60a20d519/public_url"],
@@ -1078,7 +1078,7 @@ export default function Home() {
           <SectionHeading kicker="VERIFIED LEARNING / 06" title="Credentials that reinforce the path." text="Cloud, infrastructure, cybersecurity, and operations credentials represented by their corresponding badge artwork." />
           <div className="cert-grid">
             {certifications.map(([name, issuer, status, color, badge, badgePage]) => (
-              <article className={`cert-card reveal cert-${color}`} key={name}>
+              <article className={`cert-card reveal cert-${color}`} data-cert={name} key={name}>
                 {badgePage ? (
                   <a className="cert-mark" href={badgePage} target="_blank" rel="noreferrer" aria-label={`View ${name} credential`}>
                     <img src={badge} alt={`${name} badge`} loading="lazy" decoding="async" referrerPolicy="no-referrer" />
