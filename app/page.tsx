@@ -25,6 +25,7 @@ import {
   KeyRound,
   LockKeyhole,
   Mail,
+  Moon,
   Network,
   ScanSearch,
   ScrollText,
@@ -32,6 +33,7 @@ import {
   ShieldCheck,
   Siren,
   Split,
+  Sun,
   Workflow,
   type LucideIcon,
 } from "lucide-react";
@@ -461,6 +463,225 @@ const projects: Project[] = [
       "Cloud-init user data runs only at first launch, so persistent systemd services are needed for lifecycle management.",
     ],
     github: "https://github.com/Waliur003/aws-multi-az-alb-ec2-conversion-king",
+    featured: true,
+  },
+  {
+    title: "Serverless GenAI API with Amazon Bedrock",
+    category: "AI Cloud Engineering",
+    tags: ["AI Cloud Engineering", "Amazon Bedrock"],
+    eyebrow: "Serverless inference",
+    summary: "Built a serverless GenAI API with API Gateway, Lambda, Amazon Bedrock, least-privilege IAM, request validation, and CloudWatch monitoring. Processed 100+ test requests with 0 permanently provisioned application servers and 100% Terraform-managed infrastructure while tracking inference errors and execution latency centrally.",
+    problem: "Traditional AI deployments often require persistent compute, manual scaling, and complex model hosting, increasing cost and operational overhead for applications with unpredictable request volume.",
+    architecture: "Serverless inference platform exposing foundation models through Amazon API Gateway, routing validated requests to AWS Lambda, and invoking Amazon Bedrock through the Converse API, with configuration, monitoring, and infrastructure managed through AWS services and Terraform.",
+    tech: ["Amazon Bedrock", "Amazon API Gateway", "AWS Lambda", "AWS IAM", "Amazon CloudWatch", "Python", "Boto3", "Terraform"],
+    decisions: [
+      "Selected Amazon Bedrock instead of self-hosted GPU infrastructure to remove model-server provisioning, patching, and capacity management.",
+      "Used API Gateway HTTP API and Lambda for event-driven scaling without persistent application servers.",
+      "Externalized model identifiers through Lambda environment variables and used the Bedrock Converse API to reduce model-specific application logic.",
+      "Provisioned the complete platform with Terraform for reproducible, version-controlled deployments.",
+    ],
+    security: [
+      "Assigned a dedicated Lambda execution role restricted to required bedrock:InvokeModel permissions.",
+      "Validated requests before forwarding user input to the foundation model.",
+      "Separated configuration from source code and designed the public authentication layer for JWT or Amazon Cognito integration.",
+    ],
+    reliability: [
+      "Implemented structured Bedrock exception handling and standardized HTTP responses for invalid requests, successes, and processing failures.",
+      "Configured Lambda memory and timeout settings for variable AI inference latency.",
+      "Used AWS-managed serverless services to remove single-instance application dependencies and support automatic scaling.",
+    ],
+    observability: [
+      "CloudWatch Logs capture Lambda invocation activity, errors, duration, and model-request metadata.",
+      "CloudWatch metrics track errors, throttling, execution latency, and request volume with bounded log-retention policies.",
+    ],
+    lessons: [
+      "Bedrock invocation permissions must be granted explicitly even when a model is available through the console.",
+      "Model capabilities and request formats vary, making a standardized interface such as Converse valuable.",
+      "Public inference endpoints require authentication, timeout tuning, and cost controls before production exposure.",
+    ],
+    github: "https://github.com/Waliur003/aws-serverless-genai-bedrock-api",
+    featured: true,
+  },
+  {
+    title: "Production Enterprise RAG System",
+    category: "AI Cloud Engineering",
+    tags: ["AI Cloud Engineering", "RAG"],
+    eyebrow: "Grounded retrieval",
+    summary: "Built an enterprise RAG platform using private S3 documents, Bedrock Knowledge Bases, vector retrieval, source attribution, encryption, and least-privilege IAM. Indexed 100+ sample documents, retrieved the top 3–5 relevant chunks per query, and generated grounded Bedrock responses with 100% private document storage and Terraform-managed infrastructure.",
+    problem: "Foundation models cannot inherently access private organizational documents and may produce unsupported answers when responding to questions that require company-specific information.",
+    architecture: "Retrieval-Augmented Generation platform ingesting private documents into Amazon S3, creating searchable embeddings through Bedrock Knowledge Bases, retrieving semantically relevant content from OpenSearch Serverless, and supplying grounded context and citations to Amazon Bedrock.",
+    tech: ["Amazon Bedrock", "Bedrock Knowledge Bases", "Amazon S3", "OpenSearch Serverless", "AWS Lambda", "AWS IAM", "Amazon CloudWatch", "Python", "Boto3", "Terraform"],
+    decisions: [
+      "Selected RAG over fine-tuning so changing enterprise documents can be incorporated without retraining a model.",
+      "Separated durable S3 source storage from retrieval infrastructure and used semantic vector search instead of keyword-only matching.",
+      "Applied document chunking before embedding generation and decoupled retrieval from generation so individual components remain replaceable.",
+      "Provisioned storage, IAM, compute, and retrieval infrastructure through Terraform.",
+    ],
+    security: [
+      "Encrypted source documents at rest and blocked unrestricted public access to the S3 ingestion bucket.",
+      "Applied least-privilege IAM boundaries across ingestion, retrieval, S3, and Bedrock operations.",
+      "Restricted retrieved information to explicitly authorized knowledge sources.",
+    ],
+    reliability: [
+      "Separated document ingestion from user-query processing so ingestion failures do not interrupt the query API.",
+      "Designed retryable ingestion workflows and validated processing state before exposing new documents to retrieval.",
+      "Preserved original S3 documents so vector indexes can be rebuilt after retrieval-infrastructure failures.",
+    ],
+    observability: [
+      "CloudWatch captures ingestion failures, retrieval activity, Bedrock invocation failures, query latency, and processing volume.",
+      "Retrieval metadata and returned citations identify which document chunks influenced each generated answer.",
+    ],
+    lessons: [
+      "Chunk size and overlap directly affect retrieval quality and must balance context with semantic precision.",
+      "RAG quality depends heavily on retrieval relevance, not only on foundation-model capability.",
+      "Document changes require synchronization with the vector index, and grounding reduces but does not eliminate hallucinations.",
+    ],
+    github: "https://github.com/Waliur003/aws-serverless-rag-bedrock-knowledge-base",
+  },
+  {
+    title: "Reliable Asynchronous AI Inference Pipeline",
+    category: "AI Cloud Engineering",
+    tags: ["AI Cloud Engineering", "Event Driven"],
+    eyebrow: "Asynchronous inference",
+    summary: "Built an event-driven AI inference pipeline with API Gateway, SQS, Lambda, Bedrock, DynamoDB, idempotent processing, retries, and DLQ isolation. Accepted 100+ queued AI jobs without blocking clients, retried failures up to 3 times, and tracked 4 lifecycle states: QUEUED, PROCESSING, COMPLETED, and FAILED.",
+    problem: "Long-running AI inference can exceed synchronous API response windows, create poor user experiences, and lose requests when downstream model services are throttled or temporarily unavailable.",
+    architecture: "Event-driven platform accepting jobs through API Gateway, buffering work in Amazon SQS, invoking Amazon Bedrock from scalable Lambda workers, persisting job state and results in DynamoDB, and isolating repeated failures in a dedicated dead-letter queue.",
+    tech: ["Amazon API Gateway", "Amazon SQS", "AWS Lambda", "Amazon Bedrock", "Amazon DynamoDB", "Amazon CloudWatch", "AWS IAM", "Python", "Boto3", "Terraform"],
+    decisions: [
+      "Placed SQS between request ingestion and inference workers to decouple API responsiveness from model-execution duration.",
+      "Returned unique job identifiers immediately and used DynamoDB to track QUEUED, PROCESSING, COMPLETED, and FAILED states.",
+      "Configured a DLQ for poison-message isolation and allowed SQS-triggered Lambda workers to scale with queue depth.",
+      "Provisioned the queues, workers, state store, API, IAM, and monitoring through Terraform.",
+    ],
+    security: [
+      "Separated least-privilege roles for API ingestion and inference-processing components.",
+      "Restricted workers to the required SQS, DynamoDB, CloudWatch, and Bedrock operations.",
+      "Kept queues and job-state storage private and used IAM roles instead of embedded AWS credentials.",
+    ],
+    reliability: [
+      "Configured three bounded processing attempts before routing persistent failures to a dedicated DLQ.",
+      "Used unique job identifiers and idempotent processing patterns to reduce duplicate result creation.",
+      "Aligned SQS visibility timeouts with expected worker duration and persisted state independently of Lambda execution.",
+    ],
+    observability: [
+      "CloudWatch tracks queue depth, oldest-message age, Lambda duration, errors, and throttling.",
+      "DLQ alarms expose workloads requiring investigation while DynamoDB records show each job's lifecycle state.",
+    ],
+    lessons: [
+      "SQS visibility timeouts must exceed expected processing duration to prevent simultaneous duplicate execution.",
+      "Aggressive retries can amplify Bedrock throttling, so AI workloads need bounded backoff policies.",
+      "Asynchronous APIs improve resilience but require explicit job-state and result-retrieval design.",
+    ],
+    github: "https://github.com/Waliur003/aws-serverless-async-ai-inference-pipeline",
+  },
+  {
+    title: "Containerized AI Application on ECS Fargate",
+    category: "AI Cloud Engineering",
+    tags: ["AI Cloud Engineering", "Containers"],
+    eyebrow: "Container platform",
+    summary: "Built a containerized AI application with Docker, ECR, ECS Fargate, an Application Load Balancer, private networking, autoscaling, Bedrock, and separate IAM roles. Deployed across 2+ Fargate tasks with 0 manually managed EC2 servers and routed 100% of inbound traffic through an ALB with health checks and automatic task replacement.",
+    problem: "Serverless functions become restrictive for AI services that need longer execution times, custom runtime dependencies, persistent processes, or greater control over networking and scaling.",
+    architecture: "Python AI service packaged as a Docker image in Amazon ECR and deployed to ECS Fargate behind an Application Load Balancer across isolated VPC networking, with autoscaling, CloudWatch telemetry, and secure Amazon Bedrock invocation.",
+    tech: ["Amazon ECS Fargate", "Amazon ECR", "AWS ALB", "Amazon VPC", "Amazon Bedrock", "AWS IAM", "Amazon CloudWatch", "Docker", "Python", "FastAPI", "Terraform"],
+    decisions: [
+      "Used Docker for consistent application environments and private ECR repositories for deployment artifacts.",
+      "Selected ECS Fargate to avoid EC2 host administration while retaining more runtime control than Lambda.",
+      "Separated the ECS execution role from the application task role and placed an ALB in front of multiple tasks.",
+      "Defined networking, ECS, IAM, load balancing, autoscaling, and monitoring through Terraform.",
+    ],
+    security: [
+      "Restricted task ingress to the ALB security group and designed tasks for private-subnet deployment.",
+      "Scoped the application task role to required Bedrock operations and separated it from container execution permissions.",
+      "Stored images privately in ECR and enabled image scanning for known vulnerabilities.",
+    ],
+    reliability: [
+      "Distributed traffic across two or more tasks and used ALB health checks to remove unhealthy targets.",
+      "ECS maintains desired capacity, replaces failed containers, and scales service capacity with demand.",
+      "Immutable container images support consistent redeployment and rollback.",
+    ],
+    observability: [
+      "CloudWatch centralizes application and container logs and tracks ECS utilization and unhealthy capacity.",
+      "ALB metrics expose request volume, response latency, errors, and target health with alarm coverage.",
+    ],
+    lessons: [
+      "ECS execution roles and application task roles serve different trust boundaries and should remain separate.",
+      "ALB and task security groups must be designed together to constrain application traffic correctly.",
+      "Private tasks still require controlled connectivity to AWS services and external dependencies.",
+    ],
+    github: "https://github.com/Waliur003/aws-ecs-fargate-genai-microservice",
+  },
+  {
+    title: "Multi-Model AI Routing & Automatic Fallback",
+    category: "AI Cloud Engineering",
+    tags: ["AI Cloud Engineering", "Model Routing"],
+    eyebrow: "Model resiliency",
+    summary: "Built an intelligent Bedrock gateway with centralized model abstraction, configurable routing policies, automatic fallback, bounded retries, and per-model CloudWatch metrics. Routed requests across 3 model tiers—fast/low-cost, high-capability, and fallback—and tracked 4 dimensions per invocation: model, latency, status, and fallback usage.",
+    problem: "Sending every AI request to one foundation model creates unnecessary cost, introduces a model-level dependency, and prevents workloads from optimizing for complexity, latency, availability, and capability.",
+    architecture: "Centralized inference gateway receiving requests through API Gateway and dynamically routing them among approved Amazon Bedrock models according to complexity, cost, performance, and availability policies, with bounded retries and automatic fallback.",
+    tech: ["Amazon Bedrock", "Amazon API Gateway", "AWS Lambda", "Amazon ECS", "Amazon CloudWatch", "Amazon DynamoDB", "AWS IAM", "Python", "Boto3", "Terraform"],
+    decisions: [
+      "Introduced a routing abstraction so client applications remain independent of individual foundation-model implementations.",
+      "Directed simple workloads to lower-cost models and reserved higher-capability models for complex requests.",
+      "Externalized model identifiers and routing thresholds and captured selection metadata for every request.",
+      "Designed the routing engine so additional models can be introduced without changing client applications.",
+    ],
+    security: [
+      "Restricted the routing workload to explicitly approved Bedrock model-invocation permissions.",
+      "Prevented clients from selecting arbitrary models outside centralized routing policies.",
+      "Validated inputs and used IAM roles instead of application-level AWS access keys.",
+    ],
+    reliability: [
+      "Automatically redirected eligible primary failures to a secondary model with bounded retries.",
+      "Distinguished retriable service failures from invalid client requests to prevent uncontrolled failover loops.",
+      "Maintained a default route when classification logic could not select a specialized tier confidently.",
+    ],
+    observability: [
+      "Recorded the selected model, inference latency, execution status, and fallback state for every invocation.",
+      "CloudWatch custom metrics track model-selection frequency, per-model errors, latency, and fallback activity.",
+    ],
+    lessons: [
+      "Model routing must balance quality, latency, and cost rather than optimize only one metric.",
+      "Different model response structures and capabilities require a stable abstraction layer.",
+      "Fallback limits must be strict because uncontrolled failover can multiply inference cost.",
+    ],
+    github: "https://github.com/Waliur003/aws-bedrock-multi-model-router-gateway",
+  },
+  {
+    title: "AI Cost Governance & Observability Platform",
+    category: "AI Cloud Engineering",
+    tags: ["AI Cloud Engineering", "FinOps"],
+    eyebrow: "AI FinOps",
+    summary: "Built a centralized AI operations platform using CloudWatch, AWS Budgets, Cost Anomaly Detection, SNS, custom metrics, and standardized resource tags. Unified 5 AI workloads, tracked 6+ operational indicators, and implemented 2 complementary cost controls with automated SNS notifications.",
+    problem: "Production AI systems can generate unpredictable inference costs while scattering operational signals across models, APIs, functions, queues, and containers, making abnormal spending and reliability degradation difficult to detect.",
+    architecture: "Central AI operations and governance platform aggregating application telemetry, resource metadata, and cost signals through CloudWatch dashboards and custom metrics, AWS Budgets, Cost Anomaly Detection, standardized tagging, and Amazon SNS alerting.",
+    tech: ["Amazon CloudWatch", "AWS Budgets", "AWS Cost Anomaly Detection", "Amazon SNS", "AWS IAM", "Amazon Bedrock", "AWS Lambda", "Amazon DynamoDB", "Python", "Terraform"],
+    decisions: [
+      "Centralized operational metrics from five AI workloads instead of maintaining isolated monitoring for each service.",
+      "Standardized resource tags for cost attribution by project, workload, and environment.",
+      "Published custom metrics for model usage, latency, failures, throttling, and fallback behavior.",
+      "Combined static AWS Budget thresholds with Cost Anomaly Detection and used SNS as the shared notification channel.",
+    ],
+    security: [
+      "Restricted monitoring components to required CloudWatch and cost-management permissions.",
+      "Separated application roles from centralized operational-monitoring permissions.",
+      "Excluded sensitive prompt and response content from operational metrics and limited SNS publishing rights.",
+    ],
+    reliability: [
+      "CloudWatch alarms detect abnormal failure rates and unhealthy infrastructure conditions automatically.",
+      "Budget alerts provide early warning before experimentation exceeds planned spending.",
+      "Cost Anomaly Detection complements static thresholds by identifying unexpected spending changes.",
+    ],
+    observability: [
+      "Dashboards visualize six or more operational indicators across request volume, model usage, latency, errors, throttling, and fallback activity.",
+      "Custom metrics add AI-specific visibility while AWS Budgets and Cost Anomaly Detection monitor financial behavior.",
+      "SNS distributes operational and cost alerts to engineering stakeholders.",
+    ],
+    lessons: [
+      "Infrastructure metrics alone are insufficient; AI platforms also need model and inference-level telemetry.",
+      "Logging every prompt and response creates privacy, security, and storage-cost risk, requiring selective logging.",
+      "Consistent tagging must begin early because retroactive AI cost attribution is difficult.",
+    ],
+    github: "https://github.com/Waliur003/aws-genai-observability-cost-governance",
     featured: true,
   },
   {
@@ -899,12 +1120,24 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
   const [filter, setFilter] = useState("All");
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [formStatus, setFormStatus] = useState("");
   const [isSending, setIsSending] = useState(false);
-  const filters = ["All", "Cloud Engineering", "Cloud Security"];
+  const filters = ["All", "Cloud Engineering", "AI Cloud Engineering", "Cloud Security"];
   const visibleProjects = useMemo(() => filter === "All" ? projects : projects.filter((project) => project.tags.includes(filter)), [filter]);
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => {
+      const savedTheme = window.localStorage.getItem("portfolio-theme");
+      const initialTheme = savedTheme === "light" ? "light" : "dark";
+      setTheme(initialTheme);
+      document.documentElement.dataset.theme = initialTheme;
+      document.documentElement.style.colorScheme = initialTheme;
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
@@ -913,6 +1146,14 @@ export default function Home() {
     document.querySelectorAll(".reveal").forEach((element) => observer.observe(element));
     return () => observer.disconnect();
   }, [filter]);
+
+  function toggleTheme() {
+    const nextTheme = theme === "dark" ? "light" : "dark";
+    setTheme(nextTheme);
+    document.documentElement.dataset.theme = nextTheme;
+    document.documentElement.style.colorScheme = nextTheme;
+    window.localStorage.setItem("portfolio-theme", nextTheme);
+  }
 
   async function submitContact(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -956,7 +1197,18 @@ export default function Home() {
               <a key={item} href={`#${item.toLowerCase()}`} onClick={() => setMenuOpen(false)}>{item}</a>
             ))}
           </div>
-          <ResumeLink compact />
+          <div className="nav-actions">
+            <button
+              className="theme-toggle"
+              type="button"
+              onClick={toggleTheme}
+              aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
+              title={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
+            >
+              {theme === "dark" ? <Sun aria-hidden="true" /> : <Moon aria-hidden="true" />}
+            </button>
+            <ResumeLink compact />
+          </div>
         </nav>
       </header>
 
@@ -1020,13 +1272,13 @@ export default function Home() {
 
         <section className="projects section" id="projects">
           <div className="section-inner">
-            <SectionHeading kicker="SELECTED WORK / 03" title="Architecture with evidence." text="Cloud engineering and security projects built to explore real-world patterns, failure boundaries, and defensible design decisions." />
+            <SectionHeading kicker="PROJECT PORTFOLIO / 24" title="Architecture with evidence." text="Cloud engineering, AI cloud engineering, and cloud security projects built to explore real-world patterns, failure boundaries, and defensible design decisions." />
             <div className="project-filters reveal" role="group" aria-label="Filter projects">
               {filters.map((item) => <button key={item} className={filter === item ? "active" : ""} onClick={() => setFilter(item)}>{item}</button>)}
             </div>
             <div className="project-grid">
               {visibleProjects.length === 0 && (
-                <div className="project-empty">Cloud Security projects will be added separately.</div>
+                <div className="project-empty">No projects match this filter.</div>
               )}
               {visibleProjects.map((project, index) => (
                 <article className={`project-card reveal ${project.featured ? "featured" : ""}`} key={project.title}>
